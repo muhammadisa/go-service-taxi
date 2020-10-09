@@ -29,6 +29,8 @@ func StoreTables() []interface{} {
 	return []interface{}{
 		models.Foobar{},
 		models.User{},
+		models.Car{},
+		models.Brand{},
 	}
 }
 
