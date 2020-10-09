@@ -17,6 +17,11 @@ import (
 	_foobarApi "github.com/muhammadisa/go-service-taxi/api/app/foobar/delivery/http"
 	_foobarRepo "github.com/muhammadisa/go-service-taxi/api/app/foobar/repository"
 	_foobarUsecase "github.com/muhammadisa/go-service-taxi/api/app/foobar/usecase"
+
+	_brandApi "github.com/muhammadisa/go-service-taxi/api/app/brand/delivery/http"
+	_brandRepo "github.com/muhammadisa/go-service-taxi/api/app/brand/repository"
+	_brandUsecase "github.com/muhammadisa/go-service-taxi/api/app/brand/usecase"
+
 	"github.com/muhammadisa/go-service-taxi/api/cache"
 	"gopkg.in/go-playground/validator.v9"
 
@@ -68,6 +73,7 @@ func (rc RouteConfigs) NewHTTPRoute() {
 	handler.initUserRoutes()
 	handler.initFoobarRoutes()
 	handler.initAliyunOSSRoutes()
+	handler.initBrandRoutes()
 
 	// Starting Echo Server
 	log.Fatal(handler.Echo.Start(rc.Port))
@@ -109,6 +115,12 @@ func (r *Routes) initFoobarRoutes() {
 	foobarRepo := _foobarRepo.NewPostgresFoobarRepo(r.DB, r.Cache)
 	foobarUsecase := _foobarUsecase.NewFoobarUsecase(foobarRepo)
 	_foobarApi.NewFoobarHandler(r.Group, foobarUsecase)
+}
+
+func (r *Routes) initBrandRoutes() {
+	brandRepo := _brandRepo.NewPostgresBrandRepo(r.DB, r.Cache)
+	brandUsecase := _brandUsecase.NewBrandUsecase(brandRepo)
+	_brandApi.NewBrandHandler(r.Group, brandUsecase)
 }
 
 func (r *Routes) initAliyunOSSRoutes() {

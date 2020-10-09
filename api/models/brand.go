@@ -10,7 +10,7 @@ import (
 // Brand struct
 type Brand struct {
 	ID        uuid.UUID `gorm:"type:char(36);primary_key" json:"id"`
-	BrandName string    `gorm:"size:255;not null" json:"employee_name" validate:"required"`
+	BrandName string    `gorm:"size:255;not null" json:"brand_name" validate:"required"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`
 }
