@@ -28,7 +28,7 @@ func (brandRepository *postgreBrandRepo) Fetch() (*gorm.DB, *[]models.Brand, err
 	db := brandRepository.DB.Model(
 		&models.Brand{},
 	).Order(
-		"created_at asc",
+		"created_at desc",
 	).Find(
 		&brands,
 	)

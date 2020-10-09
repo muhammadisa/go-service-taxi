@@ -63,8 +63,8 @@ func ExtractToken(c echo.Context) string {
 	return ""
 }
 
-// JWTTokenValidate validate jwt token
-func JWTTokenValidate(c echo.Context) error {
+// ExtractClaimsFromToken extracting jwt claims
+func ExtractClaimsFromToken(c echo.Context, targetClaim string) (interface{}, error) {
 	token, err := jwt.Parse(ExtractToken(c), func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("Unexpected signing method: %v", token.Header["alg"])
@@ -72,9 +72,36 @@ func JWTTokenValidate(c echo.Context) error {
 		return []byte(os.Getenv("API_SECRET")), nil
 	})
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		if targetClaim == "" {
+			return claims, nil
+		}
+		return claims[targetClaim], nil
+	}
+	return nil, nil
+}
+
+// JWTExtractData validate jwt token
+func JWTExtractData(c echo.Context) (string, error) {
+	claims, err := ExtractClaimsFromToken(c, "user_id")
+	if err != nil {
+		return "", err
+	}
+	if claims != nil {
+		return fmt.Sprintf("%s", claims), nil
+	}
+	return "", fmt.Errorf("Claims key maybe not found")
+}
+
+// JWTTokenValidate validate jwt token
+func JWTTokenValidate(c echo.Context) error {
+	claims, err := ExtractClaimsFromToken(c, "")
+	if err != nil {
+		return err
+	}
+	if claims != nil {
 		Pretty(claims)
 	}
 	return nil

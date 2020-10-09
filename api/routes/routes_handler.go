@@ -22,6 +22,10 @@ import (
 	_brandRepo "github.com/muhammadisa/go-service-taxi/api/app/brand/repository"
 	_brandUsecase "github.com/muhammadisa/go-service-taxi/api/app/brand/usecase"
 
+	_carApi "github.com/muhammadisa/go-service-taxi/api/app/car/delivery/http"
+	_carRepo "github.com/muhammadisa/go-service-taxi/api/app/car/repository"
+	_carUsecase "github.com/muhammadisa/go-service-taxi/api/app/car/usecase"
+
 	"github.com/muhammadisa/go-service-taxi/api/cache"
 	"gopkg.in/go-playground/validator.v9"
 
@@ -74,6 +78,7 @@ func (rc RouteConfigs) NewHTTPRoute() {
 	handler.initFoobarRoutes()
 	handler.initAliyunOSSRoutes()
 	handler.initBrandRoutes()
+	handler.initCarRoutes()
 
 	// Starting Echo Server
 	log.Fatal(handler.Echo.Start(rc.Port))
@@ -121,6 +126,12 @@ func (r *Routes) initBrandRoutes() {
 	brandRepo := _brandRepo.NewPostgresBrandRepo(r.DB, r.Cache)
 	brandUsecase := _brandUsecase.NewBrandUsecase(brandRepo)
 	_brandApi.NewBrandHandler(r.Group, brandUsecase)
+}
+
+func (r *Routes) initCarRoutes() {
+	carRepo := _carRepo.NewPostgresCarRepo(r.DB, r.Cache)
+	carUsecase := _carUsecase.NewCarUsecase(carRepo)
+	_carApi.NewCarHandler(r.Group, carUsecase)
 }
 
 func (r *Routes) initAliyunOSSRoutes() {

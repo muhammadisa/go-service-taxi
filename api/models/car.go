@@ -10,8 +10,9 @@ import (
 // Car struct
 type Car struct {
 	ID            uuid.UUID `gorm:"type:char(36);primary_key" json:"id"`
-	UserID        string    `gorm:"column:user_id" json:"user_id,omitempty" validate:"required"`
+	UserID        string    `gorm:"column:user_id" json:"user_id,omitempty" validate:"-"`
 	BrandID       string    `gorm:"column:brand_id" json:"brand_id,omitempty" validate:"required"`
+	Brand         *Brand    `gorm:"constraint:OnUpdate:CASCADE,OnDelete:SET NULL;foreignkey:BrandID" json:"brand,omitempty" validate:"-"`
 	CarName       string    `gorm:"size:255;not null" json:"car_name" validate:"required"`
 	Condition     string    `gorm:"size:5;not null" json:"condition" validate:"required"`
 	Description   string    `gorm:"size:1024;not null" json:"description" validate:"required"`
