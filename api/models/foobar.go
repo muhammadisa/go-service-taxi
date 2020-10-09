@@ -9,7 +9,7 @@ import (
 
 // Foobar struct
 type Foobar struct {
-	ID            uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
+	ID            uuid.UUID `gorm:"type:char(36);primary_key" json:"id"`
 	FoobarContent string    `gorm:"" json:"foobar_content" validate:"required"`
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`
 	UpdatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"updated_at"`

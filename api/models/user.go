@@ -10,7 +10,7 @@ import (
 
 // User struct
 type User struct {
-	ID        uuid.UUID `gorm:"type:uuid;primary_key;" json:"id"`
+	ID        uuid.UUID `gorm:"type:char(36);primary_key" json:"id"`
 	Email     string    `gorm:"size:255;not null;unique" json:"email" validate:"required,email"`
 	Password  string    `gorm:"size:255;not null" json:"password" validate:"required"`
 	CreatedAt time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`

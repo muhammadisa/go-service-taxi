@@ -66,7 +66,7 @@ func Run() {
 			EchoData:  echo.New(),
 			DB:        db,
 			APISecret: os.Getenv("API_SECRET"),
-			Version:   "v2",
+			Version:   "v1",
 			Port:      os.Getenv("HTTP_PORT"),
 			Origins:   strings.Split(os.Getenv("ORIGINS"), ","),
 			Cache:     client,
