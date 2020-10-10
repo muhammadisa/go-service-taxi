@@ -75,6 +75,7 @@ func Run() {
 
 	case "grpc":
 
+		// Init gRPC server
 		routes.GRPCConfigs{
 			DB:       db,
 			Protocol: "tcp",

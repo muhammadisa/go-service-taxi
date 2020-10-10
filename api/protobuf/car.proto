@@ -37,6 +37,7 @@ message CreateCar {
 
 message RetrieveCars {
     uint64 num = 1;
+    string query = 2;
 }
 
 message RetrieveByID {

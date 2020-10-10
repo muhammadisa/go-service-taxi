@@ -112,7 +112,7 @@ func (s *server) GetCars(
 	in *car_grpc.RetrieveCars,
 ) (*car_grpc.ListCars, error) {
 
-	_, res, err := s.usecase.Fetch("")
+	_, res, err := s.usecase.Fetch(in.Query)
 	if err != nil {
 		log.Println(err.Error())
 		return nil, err

@@ -7,6 +7,7 @@ import (
 	"github.com/muhammadisa/go-service-taxi/api/app/car"
 	"github.com/muhammadisa/go-service-taxi/api/cache"
 	"github.com/muhammadisa/go-service-taxi/api/models"
+	"github.com/muhammadisa/go-service-taxi/api/utils/strformater"
 	uuid "github.com/satori/go.uuid"
 )
 
@@ -34,7 +35,7 @@ func (carRepository *postgreCarRepo) Fetch(query string) (*gorm.DB, *[]models.Ca
 		true,
 	).Where(
 		"car_name LIKE ?",
-		"%"+query+"%",
+		strformater.ToQueryString(query),
 	).Order(
 		"created_at desc",
 	).Find(
