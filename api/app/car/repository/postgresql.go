@@ -137,6 +137,7 @@ func (carRepository *postgreCarRepo) Update(car *models.Car) (*models.Car, error
 			Condition:     car.Condition,
 			Description:   car.Description,
 			Specification: car.Specification,
+			ImageURL:      car.ImageURL,
 			Unit:          car.Unit,
 			Price:         car.Price,
 			UpdatedAt:     car.UpdatedAt,

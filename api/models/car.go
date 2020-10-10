@@ -17,6 +17,7 @@ type Car struct {
 	Condition     string    `gorm:"size:5;not null" json:"condition" validate:"required"`
 	Description   string    `gorm:"size:1024;not null" json:"description" validate:"required"`
 	Specification string    `gorm:"size:1024;not null" json:"specification" validate:"required"`
+	ImageURL      string    `gorm:"size:1024;not null" json:"image_url" validate:"required"`
 	Unit          int64     `gorm:"not null" json:"unit"`
 	Price         int64     `gorm:"not null" json:"price"`
 	CreatedAt     time.Time `gorm:"default:CURRENT_TIMESTAMP" json:"created_at"`

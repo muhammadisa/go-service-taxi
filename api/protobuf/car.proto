@@ -23,10 +23,11 @@ message Car {
     string Condition = 5;
     string Description = 6;
     string Specification = 7;
-    uint64 Unit = 8;
-    uint64 Price = 9;
-    google.protobuf.Timestamp UpdatedAt = 10;
-	google.protobuf.Timestamp CreatedAt = 11;
+    string ImageURL = 8;
+    uint64 Unit = 9;
+    uint64 Price = 10;
+    google.protobuf.Timestamp UpdatedAt = 11;
+	google.protobuf.Timestamp CreatedAt = 12;
 }
 
 message CreateCar {
