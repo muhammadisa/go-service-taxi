@@ -69,6 +69,30 @@ func (carRepository *postgreCarRepo) GetByID(id uuid.UUID) (*models.Car, error) 
 	return car, nil
 }
 
+func (carRepository *postgreCarRepo) GetByUserID(userID uuid.UUID) (*gorm.DB, *[]models.Car, error) {
+	var err error
+	var cars *[]models.Car = &[]models.Car{}
+
+	db := carRepository.DB.Model(
+		&models.Car{},
+	).Set(
+		"gorm:auto_preload",
+		true,
+	).Order(
+		"created_at desc",
+	).Where(
+		"user_id = ?",
+		userID.String(),
+	).Find(
+		&cars,
+	)
+	err = db.Error
+	if err != nil {
+		return nil, nil, err
+	}
+	return db, cars, nil
+}
+
 func (carRepository *postgreCarRepo) Store(car *models.Car) error {
 	var err error
 

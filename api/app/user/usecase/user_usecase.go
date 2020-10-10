@@ -16,48 +16,48 @@ type userUsecase struct {
 }
 
 // NewUserUsecase function
-func NewUserUsecase(uSr user.Repository) user.Usecase {
+func NewUserUsecase(userRepository user.Repository) user.Usecase {
 	return &userUsecase{
-		userRepository: uSr,
+		userRepository: userRepository,
 	}
 }
 
-func (uS userUsecase) Login(usr *models.User) (*models.User, *auth.Authenticated, error) {
-	uSr, authenticated, err := uS.userRepository.Login(usr)
+func (userUsecase userUsecase) Login(user *models.User) (*models.User, *auth.Authenticated, error) {
+	userResult, authenticated, err := userUsecase.userRepository.Login(user)
 	if err != nil {
 		return nil, nil, err
 	}
-	err = auth.VerifyPassword(uSr.Password, usr.Password)
+	err = auth.VerifyPassword(userResult.Password, user.Password)
 	if err != nil {
 		return nil, nil, errors.New("Email or Password is incorrect")
 	}
-	token, refresh, err := auth.GenerateToken(uSr.ID)
+	token, refresh, err := auth.GenerateToken(userResult.ID)
 	if err != nil {
 		return nil, nil, err
 	}
-	authenticated.User = uSr
+	authenticated.UserID = userResult.ID
 	authenticated.AccessToken = token
 	authenticated.RefreshToken = refresh
-	return uSr, authenticated, nil
+	return userResult, authenticated, nil
 }
 
-func (uS userUsecase) Register(usr *models.User) error {
-	err := uS.userRepository.Register(usr)
+func (userUsecase userUsecase) Register(user *models.User) error {
+	err := userUsecase.userRepository.Register(user)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (uS userUsecase) Update(usr *models.User) error {
-	usr.UpdatedAt = time.Now()
-	err := uS.userRepository.Update(usr)
+func (userUsecase userUsecase) Update(user *models.User) error {
+	user.UpdatedAt = time.Now()
+	err := userUsecase.userRepository.Update(user)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (uS userUsecase) Delete(id uuid.UUID) error {
-	return uS.userRepository.Delete(id)
+func (userUsecase userUsecase) Delete(id uuid.UUID) error {
+	return userUsecase.userRepository.Delete(id)
 }

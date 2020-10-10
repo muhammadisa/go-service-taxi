@@ -26,6 +26,7 @@ func NewCarHandler(e *echo.Group, carUsecase car.Usecase) {
 		carUsecase: carUsecase,
 	}
 	e.GET("/cars/", handler.Fetch)
+	e.GET("/cars/user", handler.FetchByUserID)
 	e.GET("/car/:id", handler.GetByID)
 	e.POST("/car/", handler.Store)
 	e.PATCH("/car/update/:id", handler.Update)
@@ -44,6 +45,45 @@ func (carHandler *CarHandler) Fetch(c echo.Context) error {
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
 
 	db, cars, err := carHandler.carUsecase.Fetch()
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, response.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Message:    err.Error(),
+			Data:       nil,
+		})
+	}
+	return c.JSON(http.StatusOK, response.Response{
+		StatusCode: http.StatusOK,
+		Message:    message.GenerateMessage(uuid.Nil, "GET", model, true),
+		Data:       paging.GetPaginator(db, page, limit, cars),
+	})
+}
+
+// FetchByUserID car data
+func (carHandler *CarHandler) FetchByUserID(c echo.Context) error {
+	var err error
+
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+
+	userID, err := auth.JWTExtractData(c)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, response.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Message:    err.Error(),
+			Data:       nil,
+		})
+	}
+	userUUID, err := uuid.FromString(userID)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, response.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Message:    err.Error(),
+			Data:       nil,
+		})
+	}
+
+	db, cars, err := carHandler.carUsecase.GetByUserID(userUUID)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, response.Response{
 			StatusCode: http.StatusUnprocessableEntity,

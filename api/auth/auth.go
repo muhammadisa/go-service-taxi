@@ -15,9 +15,9 @@ import (
 
 // Authenticated struct
 type Authenticated struct {
-	User         interface{} `json:"user"`
-	RefreshToken string      `json:"refresh_token"`
-	AccessToken  string      `json:"access_token"`
+	UserID       uuid.UUID `json:"user_id"`
+	RefreshToken string    `json:"refresh_token"`
+	AccessToken  string    `json:"access_token"`
 }
 
 // HashPassword hashing password

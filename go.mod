@@ -7,6 +7,7 @@ require (
 	github.com/biezhi/gorm-paginator/pagination v0.0.0-20190124091837-7a5c8ed20334
 	github.com/denisenkom/go-mssqldb v0.0.0-20200910202707-1e08a3fab204 // indirect
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
+	github.com/fzipp/gocyclo v0.0.0-20150627053110-6acd4345c835 // indirect
 	github.com/go-playground/universal-translator v0.17.0 // indirect
 	github.com/go-redis/redis/v7 v7.4.0
 	github.com/golang/protobuf v1.4.2

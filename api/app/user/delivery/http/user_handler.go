@@ -96,6 +96,6 @@ func (uS *UserHandler) Register(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response.Response{
 		StatusCode: http.StatusCreated,
 		Message:    message.GenerateMessage(usr.ID, "POST", model, true),
-		Data:       usr,
+		Data:       "Register successfully",
 	})
 }

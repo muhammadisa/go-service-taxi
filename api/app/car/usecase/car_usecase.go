@@ -37,6 +37,14 @@ func (carUsecases carUsecase) GetByID(id uuid.UUID) (*models.Car, error) {
 	return res, nil
 }
 
+func (carUsecases carUsecase) GetByUserID(userID uuid.UUID) (*gorm.DB, *[]models.Car, error) {
+	db, res, err := carUsecases.carRepository.GetByUserID(userID)
+	if err != nil {
+		return nil, nil, err
+	}
+	return db, res, nil
+}
+
 func (carUsecases carUsecase) Store(car *models.Car, userID uuid.UUID) error {
 	car.UserID = userID.String()
 	err := carUsecases.carRepository.Store(car)
