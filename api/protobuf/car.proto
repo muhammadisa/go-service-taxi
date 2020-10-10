@@ -1,0 +1,66 @@
+syntax = "proto3"; 
+
+package car_grpc;
+
+option go_package = "car_grpc;car_grpc";
+
+import "google/protobuf/timestamp.proto";
+
+service CarHandler {
+    rpc GetCars (RetrieveCars) returns (ListCars);
+    rpc GetCarByID (RetrieveByID) returns (Car);
+    rpc GetCarsByUserID (RetrieveByUserID) returns (ListCars);
+    rpc Store (CreateCar) returns (Car);
+    rpc Update (UpdateRequest) returns (Car);
+    rpc Delete (DeleteByID) returns (DeleteResponse);
+}
+
+message Car {
+    string ID = 1;
+    string UserID = 2;
+    string BrandID = 3;
+    string CarName = 4;
+    string Condition = 5;
+    string Description = 6;
+    string Specification = 7;
+    uint64 Unit = 8;
+    uint64 Price = 9;
+    google.protobuf.Timestamp UpdatedAt = 10;
+	google.protobuf.Timestamp CreatedAt = 11;
+}
+
+message CreateCar {
+    Car car = 1;
+    string UserID = 2;
+}
+
+message RetrieveCars {
+    uint64 num = 1;
+}
+
+message RetrieveByID {
+    string ID = 1;
+}
+
+message RetrieveByUserID {
+    string ID = 1;
+}
+
+message DeleteByID {
+    string ID = 1;
+    string UserID = 2;
+}
+
+message DeleteResponse {
+    uint64 ok = 1;
+}
+
+message UpdateRequest {
+    Car car = 1;
+    string ID = 2;
+    string UserID = 3;
+}
+
+message ListCars {
+    repeated Car cars = 1;
+}

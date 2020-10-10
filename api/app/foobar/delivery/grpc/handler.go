@@ -8,11 +8,10 @@ import (
 
 	google_protobuf "github.com/golang/protobuf/ptypes/timestamp"
 	"github.com/muhammadisa/go-service-taxi/api/app/foobar"
-	"github.com/muhammadisa/go-service-taxi/api/app/foobar/delivery/grpc/foobar_grpc"
 	"github.com/muhammadisa/go-service-taxi/api/models"
+	"github.com/muhammadisa/go-service-taxi/api/protobuf/foobar_grpc"
 	uuid "github.com/satori/go.uuid"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 type server struct {
@@ -25,7 +24,6 @@ func NewFoobarServerGrpc(gserver *grpc.Server, foobarUsecase foobar.Usecase) {
 		usecase: foobarUsecase,
 	}
 	foobar_grpc.RegisterFoobarHandlerServer(gserver, foobarServer)
-	reflection.Register(gserver)
 }
 
 func (s *server) transformFoobarRPC(fBar *models.Foobar) *foobar_grpc.Foobar {

@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package foobar_grpc;
 
+option go_package = "foobar_grpc;foobar_grpc";
+
 import "google/protobuf/timestamp.proto";
 
 service FoobarHandler {
