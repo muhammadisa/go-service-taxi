@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/jinzhu/gorm"
 	"github.com/muhammadisa/go-service-taxi/api/app/car"
 	"github.com/muhammadisa/go-service-taxi/api/cache"
@@ -108,16 +110,30 @@ func (carRepository *postgreCarRepo) Store(car *models.Car) error {
 
 func (carRepository *postgreCarRepo) Update(car *models.Car) (*models.Car, error) {
 	var updatedCar *models.Car = &models.Car{}
+	var selectedBrand *models.Brand = &models.Brand{}
+
 	db := carRepository.DB.Model(
+		&models.Brand{},
+	).Where(
+		"id = ?",
+		car.BrandID,
+	).Find(
+		&selectedBrand,
+	)
+	if db.Error != nil {
+		return nil, fmt.Errorf("Brand ID not found")
+	}
+
+	db = carRepository.DB.Model(
 		&models.Car{},
 	).Where(
 		"id = ? AND user_id = ?",
-		car.ID.String(),
+		car.ID,
 		car.UserID,
 	).Update(
 		models.Car{
 			CarName:       car.CarName,
-			BrandID:       car.BrandID,
+			BrandID:       selectedBrand.ID.String(),
 			Condition:     car.Condition,
 			Description:   car.Description,
 			Specification: car.Specification,
