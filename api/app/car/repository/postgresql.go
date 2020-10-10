@@ -95,7 +95,21 @@ func (carRepository *postgreCarRepo) GetByUserID(userID uuid.UUID) (*gorm.DB, *[
 
 func (carRepository *postgreCarRepo) Store(car *models.Car) error {
 	var err error
+	var selectedBrand *models.Brand = &models.Brand{}
 
+	db := carRepository.DB.Model(
+		&models.Brand{},
+	).Where(
+		"id = ?",
+		car.BrandID,
+	).Find(
+		&selectedBrand,
+	)
+	if db.Error != nil {
+		return fmt.Errorf("Brand ID not found")
+	}
+
+	car.BrandID = selectedBrand.ID.String()
 	err = carRepository.DB.Model(
 		&models.Car{},
 	).Create(
