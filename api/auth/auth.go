@@ -42,6 +42,7 @@ func GenerateToken(id uuid.UUID) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
+
 	// RefreshToken
 	refreshToken := jwt.New(jwt.SigningMethodHS256)
 	rtClaims := refreshToken.Claims.(jwt.MapClaims)
@@ -56,11 +57,13 @@ func GenerateToken(id uuid.UUID) (string, string, error) {
 
 // ExtractToken extract token from Bearer
 func ExtractToken(c echo.Context) string {
+
 	bearerToken := c.Request().Header.Get("Authorization")
 	if len(strings.Split(bearerToken, " ")) == 2 {
 		return strings.Split(bearerToken, " ")[1]
 	}
 	return ""
+
 }
 
 // ExtractClaimsFromToken extracting jwt claims

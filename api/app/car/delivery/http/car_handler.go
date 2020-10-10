@@ -212,15 +212,7 @@ func (carHandler *CarHandler) Update(c echo.Context) error {
 			Data:       err,
 		})
 	}
-	_, err = carHandler.carUsecase.GetByID(car.ID)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, response.Response{
-			StatusCode: http.StatusNotFound,
-			Message:    err.Error(),
-			Data:       nil,
-		})
-	}
-	err = carHandler.carUsecase.Update(&car, userUUID)
+	updatedCar, err := carHandler.carUsecase.Update(&car, userUUID)
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.Response{
 			StatusCode: http.StatusBadRequest,
@@ -231,7 +223,7 @@ func (carHandler *CarHandler) Update(c echo.Context) error {
 	return c.JSON(http.StatusCreated, response.Response{
 		StatusCode: http.StatusCreated,
 		Message:    message.GenerateMessage(car.ID, "PATCH", model, true),
-		Data:       car,
+		Data:       &updatedCar,
 	})
 }
 
@@ -239,7 +231,23 @@ func (carHandler *CarHandler) Update(c echo.Context) error {
 func (carHandler *CarHandler) Delete(c echo.Context) error {
 	var err error
 
-	uid, err := uuid.FromString(c.Param("id"))
+	userID, err := auth.JWTExtractData(c)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, response.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Message:    err.Error(),
+			Data:       nil,
+		})
+	}
+	userUUID, err := uuid.FromString(userID)
+	if err != nil {
+		return c.JSON(http.StatusUnprocessableEntity, response.Response{
+			StatusCode: http.StatusUnprocessableEntity,
+			Message:    err.Error(),
+			Data:       nil,
+		})
+	}
+	carID, err := uuid.FromString(c.Param("id"))
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, response.Response{
 			StatusCode: http.StatusBadRequest,
@@ -247,15 +255,8 @@ func (carHandler *CarHandler) Delete(c echo.Context) error {
 			Data:       nil,
 		})
 	}
-	car, err := carHandler.carUsecase.GetByID(uid)
-	if err != nil {
-		return c.JSON(http.StatusNotFound, response.Response{
-			StatusCode: http.StatusNotFound,
-			Message:    err.Error(),
-			Data:       nil,
-		})
-	}
-	err = carHandler.carUsecase.Delete(car.ID)
+
+	err = carHandler.carUsecase.Delete(carID, userUUID)
 	if err != nil {
 		return c.JSON(http.StatusNotFound, response.Response{
 			StatusCode: http.StatusNotFound,
@@ -265,7 +266,7 @@ func (carHandler *CarHandler) Delete(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, response.Response{
 		StatusCode: http.StatusOK,
-		Message:    message.GenerateMessage(uid, "DELETE", model, true),
-		Data:       car.ID,
+		Message:    message.GenerateMessage(carID, "DELETE", model, true),
+		Data:       "Successfully deleted",
 	})
 }

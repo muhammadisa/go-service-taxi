@@ -78,8 +78,6 @@ func (carRepository *postgreCarRepo) GetByUserID(userID uuid.UUID) (*gorm.DB, *[
 	).Set(
 		"gorm:auto_preload",
 		true,
-	).Order(
-		"created_at desc",
 	).Where(
 		"user_id = ?",
 		userID.String(),
@@ -108,43 +106,60 @@ func (carRepository *postgreCarRepo) Store(car *models.Car) error {
 	return nil
 }
 
-func (carRepository *postgreCarRepo) Update(car *models.Car) error {
-	var err error
-
-	err = carRepository.DB.Model(
+func (carRepository *postgreCarRepo) Update(car *models.Car) (*models.Car, error) {
+	var updatedCar *models.Car = &models.Car{}
+	db := carRepository.DB.Model(
 		&models.Car{},
 	).Where(
-		"id = ?",
+		"id = ? AND user_id = ?",
 		car.ID.String(),
-	).Update(models.Car{
-		CarName:       car.CarName,
-		BrandID:       car.BrandID,
-		Condition:     car.Condition,
-		Description:   car.Description,
-		Specification: car.Specification,
-		Unit:          car.Unit,
-		Price:         car.Price,
-		UpdatedAt:     car.UpdatedAt,
-	}).Error
-	if err != nil {
-		return err
+		car.UserID,
+	).Update(
+		models.Car{
+			CarName:       car.CarName,
+			BrandID:       car.BrandID,
+			Condition:     car.Condition,
+			Description:   car.Description,
+			Specification: car.Specification,
+			Unit:          car.Unit,
+			Price:         car.Price,
+			UpdatedAt:     car.UpdatedAt,
+		},
+	).Where(
+		"id = ? AND user_id = ?",
+		car.ID.String(),
+		car.UserID,
+	).Find(
+		&updatedCar,
+	)
+	if db.Error != nil {
+		return nil, db.Error
 	}
-	return nil
+	return updatedCar, nil
 }
 
-func (carRepository *postgreCarRepo) Delete(id uuid.UUID) error {
+func (carRepository *postgreCarRepo) Delete(id uuid.UUID, userID uuid.UUID) error {
 	var err error
+	var wantsToDeleted *models.Car = &models.Car{}
 
 	err = carRepository.DB.Model(
 		&models.Car{},
 	).Where(
-		"id = ?",
-		id,
-	).Delete(
-		&models.Car{},
+		"id = ? AND user_id = ?",
+		id, userID,
+	).Find(
+		&wantsToDeleted,
 	).Error
 	if err != nil {
 		return err
 	}
+
+	err = carRepository.DB.Model(
+		&models.Car{},
+	).Delete(&wantsToDeleted).Error
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

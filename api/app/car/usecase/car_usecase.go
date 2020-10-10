@@ -54,12 +54,12 @@ func (carUsecases carUsecase) Store(car *models.Car, userID uuid.UUID) error {
 	return nil
 }
 
-func (carUsecases carUsecase) Update(car *models.Car, userID uuid.UUID) error {
+func (carUsecases carUsecase) Update(car *models.Car, userID uuid.UUID) (*models.Car, error) {
 	car.UserID = userID.String()
 	car.UpdatedAt = time.Now()
 	return carUsecases.carRepository.Update(car)
 }
 
-func (carUsecases carUsecase) Delete(id uuid.UUID) error {
-	return carUsecases.carRepository.Delete(id)
+func (carUsecases carUsecase) Delete(id uuid.UUID, userID uuid.UUID) error {
+	return carUsecases.carRepository.Delete(id, userID)
 }
