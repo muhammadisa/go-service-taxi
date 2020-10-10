@@ -43,8 +43,9 @@ func (carHandler *CarHandler) Fetch(c echo.Context) error {
 
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	limit, _ := strconv.Atoi(c.QueryParam("limit"))
+	query := c.QueryParam("name")
 
-	db, cars, err := carHandler.carUsecase.Fetch()
+	db, cars, err := carHandler.carUsecase.Fetch(query)
 	if err != nil {
 		return c.JSON(http.StatusUnprocessableEntity, response.Response{
 			StatusCode: http.StatusUnprocessableEntity,

@@ -23,7 +23,7 @@ func NewPostgresCarRepo(db *gorm.DB, cacheClient cache.Redis) car.Repository {
 	}
 }
 
-func (carRepository *postgreCarRepo) Fetch() (*gorm.DB, *[]models.Car, error) {
+func (carRepository *postgreCarRepo) Fetch(query string) (*gorm.DB, *[]models.Car, error) {
 	var err error
 	var cars *[]models.Car = &[]models.Car{}
 
@@ -32,6 +32,9 @@ func (carRepository *postgreCarRepo) Fetch() (*gorm.DB, *[]models.Car, error) {
 	).Set(
 		"gorm:auto_preload",
 		true,
+	).Where(
+		"car_name LIKE ?",
+		"%"+query+"%",
 	).Order(
 		"created_at desc",
 	).Find(

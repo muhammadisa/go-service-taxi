@@ -21,8 +21,8 @@ func NewCarUsecase(carRepository car.Repository) car.Usecase {
 	}
 }
 
-func (carUsecases carUsecase) Fetch() (*gorm.DB, *[]models.Car, error) {
-	db, res, err := carUsecases.carRepository.Fetch()
+func (carUsecases carUsecase) Fetch(query string) (*gorm.DB, *[]models.Car, error) {
+	db, res, err := carUsecases.carRepository.Fetch(query)
 	if err != nil {
 		return nil, nil, err
 	}

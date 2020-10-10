@@ -8,7 +8,7 @@ import (
 
 // Repository interface
 type Repository interface {
-	Fetch() (*gorm.DB, *[]models.Car, error)
+	Fetch(query string) (*gorm.DB, *[]models.Car, error)
 	GetByID(id uuid.UUID) (*models.Car, error)
 	GetByUserID(userID uuid.UUID) (*gorm.DB, *[]models.Car, error)
 	Update(car *models.Car) (*models.Car, error)
